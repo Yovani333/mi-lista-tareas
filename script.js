@@ -218,3 +218,4 @@ function formatearFecha(fecha) {
 }
 
 mostrarTareas();
+actualizarBotonActivo();
