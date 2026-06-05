@@ -3,7 +3,6 @@ const lista = document.getElementById("listaTareas");
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
-// Convierte tareas antiguas de texto simple a formato nuevo
 tareas = tareas.map(function(tarea) {
   if (typeof tarea === "string") {
     return {
@@ -23,6 +22,10 @@ function mostrarTareas() {
   tareas.forEach(function(tarea, index) {
     const nuevaTarea = document.createElement("li");
 
+    if (tarea.completada) {
+      nuevaTarea.classList.add("tarea-completada");
+    }
+
     const contenedorTexto = document.createElement("div");
     contenedorTexto.classList.add("tarea-info");
 
@@ -37,13 +40,17 @@ function mostrarTareas() {
       texto.classList.add("completada");
     }
 
-    checkbox.onchange = function() {
-      cambiarEstado(index);
-    };
+    checkbox.addEventListener("change", function() {
+      tareas[index].completada = checkbox.checked;
+      guardarTareas();
+      mostrarTareas();
+    });
 
-    texto.onclick = function() {
-      cambiarEstado(index);
-    };
+    texto.addEventListener("click", function() {
+      tareas[index].completada = !tareas[index].completada;
+      guardarTareas();
+      mostrarTareas();
+    });
 
     contenedorTexto.appendChild(checkbox);
     contenedorTexto.appendChild(texto);
@@ -51,12 +58,13 @@ function mostrarTareas() {
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
 
-    botonEliminar.onclick = function() {
+    botonEliminar.addEventListener("click", function() {
       eliminarTarea(index);
-    };
+    });
 
     nuevaTarea.appendChild(contenedorTexto);
     nuevaTarea.appendChild(botonEliminar);
+
     lista.appendChild(nuevaTarea);
   });
 }
@@ -79,12 +87,6 @@ function agregarTarea() {
   mostrarTareas();
 
   input.value = "";
-}
-
-function cambiarEstado(index) {
-  tareas[index].completada = !tareas[index].completada;
-  guardarTareas();
-  mostrarTareas();
 }
 
 function eliminarTarea(index) {
