@@ -1,4 +1,3 @@
-const buscadorInput = document.getElementById("buscadorInput");
 const input = document.getElementById("tareaInput");
 const prioridadInput = document.getElementById("prioridadInput");
 const fechaInput = document.getElementById("fechaInput");
