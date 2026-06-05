@@ -387,3 +387,22 @@ input[type="date"] {
   background-color: #e5e7eb;
   color: #374151;
 }
+.buscador-contenedor {
+  width: 100%;
+  margin: 15px 0;
+}
+
+#buscadorInput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+#buscadorInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
