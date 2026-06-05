@@ -170,7 +170,22 @@ function agregarTarea() {
 
 function cambiarFiltro(filtro) {
   filtroActual = filtro;
+  actualizarBotonActivo();
   mostrarTareas();
+}
+
+function actualizarBotonActivo() {
+  const botones = document.querySelectorAll(".filtros button");
+
+  botones.forEach(function(boton) {
+    boton.classList.remove("activo");
+  });
+
+  const botonActivo = document.getElementById("filtro-" + filtroActual);
+
+  if (botonActivo) {
+    botonActivo.classList.add("activo");
+  }
 }
 
 function eliminarTarea(index) {
