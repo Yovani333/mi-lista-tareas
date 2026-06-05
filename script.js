@@ -10,7 +10,16 @@ function mostrarTareas() {
     const nuevaTarea = document.createElement("li");
 
     const texto = document.createElement("span");
-    texto.textContent = tarea;
+    texto.textContent = tarea.texto;
+
+    if (tarea.completada) {
+      texto.style.textDecoration = "line-through";
+      texto.style.opacity = "0.6";
+    }
+
+    texto.onclick = function() {
+      cambiarEstado(index);
+    };
 
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
@@ -33,11 +42,22 @@ function agregarTarea() {
     return;
   }
 
-  tareas.push(textoTarea);
+  const nuevaTarea = {
+    texto: textoTarea,
+    completada: false
+  };
+
+  tareas.push(nuevaTarea);
   guardarTareas();
   mostrarTareas();
 
   input.value = "";
+}
+
+function cambiarEstado(index) {
+  tareas[index].completada = !tareas[index].completada;
+  guardarTareas();
+  mostrarTareas();
 }
 
 function eliminarTarea(index) {
