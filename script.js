@@ -110,11 +110,21 @@ function mostrarTareaNormal(tarea, index) {
   const etiquetaFecha = document.createElement("small");
   etiquetaFecha.classList.add("etiqueta-fecha");
 
-  if (tarea.fecha) {
-    etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
-  } else {
-    etiquetaFecha.textContent = "Sin fecha límite";
-  }
+if (tarea.fecha) {
+  etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
+} else {
+  etiquetaFecha.textContent = "Sin fecha límite";
+}
+
+const etiquetaEstadoFecha = document.createElement("small");
+etiquetaEstadoFecha.textContent = obtenerEstadoFecha(tarea.fecha);
+etiquetaEstadoFecha.classList.add("estado-fecha");
+
+if (tarea.fecha) {
+  etiquetaEstadoFecha.classList.add(obtenerClaseFecha(tarea.fecha));
+} else {
+  etiquetaEstadoFecha.classList.add("sin-fecha");
+}
 
   checkbox.addEventListener("change", function() {
     tareas[index].completada = checkbox.checked;
@@ -130,9 +140,10 @@ function mostrarTareaNormal(tarea, index) {
 
   const bloqueTexto = document.createElement("div");
   bloqueTexto.classList.add("bloque-texto");
-  bloqueTexto.appendChild(texto);
-  bloqueTexto.appendChild(etiquetaPrioridad);
-  bloqueTexto.appendChild(etiquetaFecha);
+bloqueTexto.appendChild(texto);
+bloqueTexto.appendChild(etiquetaPrioridad);
+bloqueTexto.appendChild(etiquetaFecha);
+bloqueTexto.appendChild(etiquetaEstadoFecha);
 
   contenedorTexto.appendChild(checkbox);
   contenedorTexto.appendChild(bloqueTexto);
@@ -333,7 +344,63 @@ function actualizarContador() {
     " | Total: " + total;
 }
 
-function guardarTareas() {
+function obtenerEstadoFecha(fecha) {
+  if (!fecha) {
+    return "SIN FECHA";
+  }
+
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const fechaTarea = new Date(fecha + "T00:00:00");
+  fechaTarea.setHours(0, 0, 0, 0);
+
+  const diferenciaTiempo = fechaTarea - hoy;
+  const diferenciaDias = diferenciaTiempo / (1000 * 60 * 60 * 24);
+
+  if (diferenciaDias < 0) {
+    return "VENCIDA";
+  }
+
+  if (diferenciaDias === 0) {
+    return "VENCE HOY";
+  }
+
+  if (diferenciaDias <= 3) {
+    return "PRÓXIMA";
+  }
+
+  return "EN FECHA";
+}
+
+function obtenerClaseFecha(fecha) {
+  if (!fecha) {
+    return "sin-fecha";
+  }
+
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const fechaTarea = new Date(fecha + "T00:00:00");
+  fechaTarea.setHours(0, 0, 0, 0);
+
+  const diferenciaTiempo = fechaTarea - hoy;
+  const diferenciaDias = diferenciaTiempo / (1000 * 60 * 60 * 24);
+
+  if (diferenciaDias < 0) {
+    return "fecha-vencida";
+  }
+
+  if (diferenciaDias === 0) {
+    return "fecha-hoy";
+  }
+
+  if (diferenciaDias <= 3) {
+    return "fecha-proxima";
+  }
+
+  return "fecha-ok";
+}
   localStorage.setItem("tareas", JSON.stringify(tareas));
 }
 
