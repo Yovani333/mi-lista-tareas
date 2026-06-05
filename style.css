@@ -161,3 +161,22 @@ input[type="date"] {
 .formulario {
   flex-wrap: wrap;
 }
+.formulario {
+  display: grid;
+  grid-template-columns: 1fr 120px 180px 110px;
+  gap: 10px;
+  align-items: center;
+}
+
+.formulario input,
+.formulario select,
+.formulario button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+}
