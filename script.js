@@ -3,6 +3,8 @@ const prioridadInput = document.getElementById("prioridadInput");
 const fechaInput = document.getElementById("fechaInput");
 const lista = document.getElementById("listaTareas");
 
+let filtroActual = "todas";
+
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
 tareas = tareas.map(function(tarea) {
@@ -49,7 +51,23 @@ function mostrarTareas() {
     return ordenPrioridad[a.prioridad] - ordenPrioridad[b.prioridad];
   });
 
-  tareasOrdenadas.forEach(function(tarea) {
+  const tareasFiltradas = tareasOrdenadas.filter(function(tarea) {
+    if (filtroActual === "todas") {
+      return true;
+    }
+
+    if (filtroActual === "pendientes") {
+      return !tarea.completada;
+    }
+
+    if (filtroActual === "completadas") {
+      return tarea.completada;
+    }
+
+    return tarea.prioridad === filtroActual;
+  });
+
+  tareasFiltradas.forEach(function(tarea) {
     const index = tareas.indexOf(tarea);
 
     const nuevaTarea = document.createElement("li");
@@ -146,6 +164,11 @@ function agregarTarea() {
   input.value = "";
   prioridadInput.value = "baja";
   fechaInput.value = "";
+}
+
+function cambiarFiltro(filtro) {
+  filtroActual = filtro;
+  mostrarTareas();
 }
 
 function eliminarTarea(index) {
