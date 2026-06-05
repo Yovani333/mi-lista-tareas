@@ -31,7 +31,19 @@ guardarTareas();
 function mostrarTareas() {
   lista.innerHTML = "";
 
-  tareas.forEach(function(tarea, index) {
+  const tareasOrdenadas = [...tareas].sort(function(a, b) {
+    const ordenPrioridad = {
+      alta: 1,
+      media: 2,
+      baja: 3
+    };
+
+    return ordenPrioridad[a.prioridad] - ordenPrioridad[b.prioridad];
+  });
+
+  tareasOrdenadas.forEach(function(tarea) {
+    const index = tareas.indexOf(tarea);
+
     const nuevaTarea = document.createElement("li");
 
     nuevaTarea.classList.add("prioridad-" + tarea.prioridad);
