@@ -28,12 +28,12 @@
   Pendientes: 0 | Completadas: 0 | Total: 0
 </div>
 <div class="filtros">
-  <button onclick="cambiarFiltro('todas')">Todas</button>
-  <button onclick="cambiarFiltro('pendientes')">Pendientes</button>
-  <button onclick="cambiarFiltro('completadas')">Completadas</button>
-  <button onclick="cambiarFiltro('alta')">Alta</button>
-  <button onclick="cambiarFiltro('media')">Media</button>
-  <button onclick="cambiarFiltro('baja')">Baja</button>
+  <button id="filtro-todas" class="activo" onclick="cambiarFiltro('todas')">Todas</button>
+  <button id="filtro-pendientes" onclick="cambiarFiltro('pendientes')">Pendientes</button>
+  <button id="filtro-completadas" onclick="cambiarFiltro('completadas')">Completadas</button>
+  <button id="filtro-alta" onclick="cambiarFiltro('alta')">Alta</button>
+  <button id="filtro-media" onclick="cambiarFiltro('media')">Media</button>
+  <button id="filtro-baja" onclick="cambiarFiltro('baja')">Baja</button>
 </div>
     <ul id="listaTareas"></ul>
   </div>
