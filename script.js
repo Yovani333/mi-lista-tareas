@@ -1,4 +1,5 @@
 const input = document.getElementById("tareaInput");
+const prioridadInput = document.getElementById("prioridadInput");
 const lista = document.getElementById("listaTareas");
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
@@ -7,8 +8,13 @@ tareas = tareas.map(function(tarea) {
   if (typeof tarea === "string") {
     return {
       texto: tarea,
-      completada: false
+      completada: false,
+      prioridad: "baja"
     };
+  }
+
+  if (!tarea.prioridad) {
+    tarea.prioridad = "baja";
   }
 
   return tarea;
@@ -21,6 +27,8 @@ function mostrarTareas() {
 
   tareas.forEach(function(tarea, index) {
     const nuevaTarea = document.createElement("li");
+
+    nuevaTarea.classList.add("prioridad-" + tarea.prioridad);
 
     if (tarea.completada) {
       nuevaTarea.classList.add("tarea-completada");
@@ -40,6 +48,10 @@ function mostrarTareas() {
       texto.classList.add("completada");
     }
 
+    const etiquetaPrioridad = document.createElement("small");
+    etiquetaPrioridad.textContent = tarea.prioridad.toUpperCase();
+    etiquetaPrioridad.classList.add("etiqueta-prioridad");
+
     checkbox.addEventListener("change", function() {
       tareas[index].completada = checkbox.checked;
       guardarTareas();
@@ -52,8 +64,13 @@ function mostrarTareas() {
       mostrarTareas();
     });
 
+    const bloqueTexto = document.createElement("div");
+    bloqueTexto.classList.add("bloque-texto");
+    bloqueTexto.appendChild(texto);
+    bloqueTexto.appendChild(etiquetaPrioridad);
+
     contenedorTexto.appendChild(checkbox);
-    contenedorTexto.appendChild(texto);
+    contenedorTexto.appendChild(bloqueTexto);
 
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
@@ -71,6 +88,7 @@ function mostrarTareas() {
 
 function agregarTarea() {
   const textoTarea = input.value.trim();
+  const prioridad = prioridadInput.value;
 
   if (textoTarea === "") {
     alert("Por favor escribe una tarea.");
@@ -79,7 +97,8 @@ function agregarTarea() {
 
   const nuevaTarea = {
     texto: textoTarea,
-    completada: false
+    completada: false,
+    prioridad: prioridad
   };
 
   tareas.push(nuevaTarea);
@@ -87,6 +106,7 @@ function agregarTarea() {
   mostrarTareas();
 
   input.value = "";
+  prioridadInput.value = "baja";
 }
 
 function eliminarTarea(index) {
