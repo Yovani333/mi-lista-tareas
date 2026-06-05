@@ -59,3 +59,17 @@ li {
   justify-content: space-between;
   align-items: center;
 }
+.tarea-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tarea-info span {
+  cursor: pointer;
+}
+
+.completada {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
