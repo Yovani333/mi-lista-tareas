@@ -73,3 +73,28 @@ li {
   text-decoration: line-through;
   opacity: 0.6;
 }
+.tarea-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tarea-info input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  cursor: pointer;
+}
+
+.tarea-info span {
+  cursor: pointer;
+}
+
+.completada {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.tarea-completada {
+  background-color: #d1fae5;
+}
