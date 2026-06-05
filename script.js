@@ -1,8 +1,10 @@
+const buscadorInput = document.getElementById("buscadorInput");
 const input = document.getElementById("tareaInput");
 const prioridadInput = document.getElementById("prioridadInput");
 const fechaInput = document.getElementById("fechaInput");
 const lista = document.getElementById("listaTareas");
 const contadorTareas = document.getElementById("contadorTareas");
+const buscadorInput = document.getElementById("buscadorInput");
 
 let filtroActual = "todas";
 let tareaEditando = null;
@@ -40,6 +42,10 @@ function mostrarTareas() {
   lista.innerHTML = "";
   actualizarContador();
 
+  const textoBusqueda = buscadorInput
+    ? buscadorInput.value.toLowerCase().trim()
+    : "";
+
   const tareasOrdenadas = [...tareas].sort(function(a, b) {
     const ordenPrioridad = {
       alta: 1,
@@ -55,19 +61,37 @@ function mostrarTareas() {
   });
 
   const tareasFiltradas = tareasOrdenadas.filter(function(tarea) {
+    let coincideFiltro = false;
+
     if (filtroActual === "todas") {
-      return true;
+      coincideFiltro = true;
     }
 
     if (filtroActual === "pendientes") {
-      return !tarea.completada;
+      coincideFiltro = !tarea.completada;
     }
 
     if (filtroActual === "completadas") {
-      return tarea.completada;
+      coincideFiltro = tarea.completada;
     }
 
-    return tarea.prioridad === filtroActual;
+    if (filtroActual === "alta") {
+      coincideFiltro = tarea.prioridad === "alta";
+    }
+
+    if (filtroActual === "media") {
+      coincideFiltro = tarea.prioridad === "media";
+    }
+
+    if (filtroActual === "baja") {
+      coincideFiltro = tarea.prioridad === "baja";
+    }
+
+    const coincideBusqueda = tarea.texto
+      .toLowerCase()
+      .includes(textoBusqueda);
+
+    return coincideFiltro && coincideBusqueda;
   });
 
   tareasFiltradas.forEach(function(tarea) {
@@ -404,6 +428,13 @@ function guardarTareas() {
 function formatearFecha(fecha) {
   const partes = fecha.split("-");
   return partes[2] + "/" + partes[1] + "/" + partes[0];
+}
+
+if (buscadorInput) {
+  buscadorInput.addEventListener("input", function() {
+    tareaEditando = null;
+    mostrarTareas();
+  });
 }
 
 actualizarBotonActivo();
