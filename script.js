@@ -5,6 +5,7 @@ const lista = document.getElementById("listaTareas");
 const contadorTareas = document.getElementById("contadorTareas");
 
 let filtroActual = "todas";
+let tareaEditando = null;
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
@@ -72,87 +73,178 @@ function mostrarTareas() {
   tareasFiltradas.forEach(function(tarea) {
     const index = tareas.indexOf(tarea);
 
-    const nuevaTarea = document.createElement("li");
-    nuevaTarea.classList.add("prioridad-" + tarea.prioridad);
-
-    if (tarea.completada) {
-      nuevaTarea.classList.add("tarea-completada");
-    }
-
-    const contenedorTexto = document.createElement("div");
-    contenedorTexto.classList.add("tarea-info");
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = tarea.completada;
-
-    const texto = document.createElement("span");
-    texto.textContent = tarea.texto;
-
-    if (tarea.completada) {
-      texto.classList.add("completada");
-    }
-
-    const etiquetaPrioridad = document.createElement("small");
-    etiquetaPrioridad.textContent = tarea.prioridad.toUpperCase();
-    etiquetaPrioridad.classList.add("etiqueta-prioridad");
-
-    const etiquetaFecha = document.createElement("small");
-    etiquetaFecha.classList.add("etiqueta-fecha");
-
-    if (tarea.fecha) {
-      etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
+    if (tareaEditando === index) {
+      mostrarFormularioEdicion(tarea, index);
     } else {
-      etiquetaFecha.textContent = "Sin fecha límite";
+      mostrarTareaNormal(tarea, index);
+    }
+  });
+}
+
+function mostrarTareaNormal(tarea, index) {
+  const nuevaTarea = document.createElement("li");
+  nuevaTarea.classList.add("prioridad-" + tarea.prioridad);
+
+  if (tarea.completada) {
+    nuevaTarea.classList.add("tarea-completada");
+  }
+
+  const contenedorTexto = document.createElement("div");
+  contenedorTexto.classList.add("tarea-info");
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = tarea.completada;
+
+  const texto = document.createElement("span");
+  texto.textContent = tarea.texto;
+
+  if (tarea.completada) {
+    texto.classList.add("completada");
+  }
+
+  const etiquetaPrioridad = document.createElement("small");
+  etiquetaPrioridad.textContent = tarea.prioridad.toUpperCase();
+  etiquetaPrioridad.classList.add("etiqueta-prioridad");
+
+  const etiquetaFecha = document.createElement("small");
+  etiquetaFecha.classList.add("etiqueta-fecha");
+
+  if (tarea.fecha) {
+    etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
+  } else {
+    etiquetaFecha.textContent = "Sin fecha límite";
+  }
+
+  checkbox.addEventListener("change", function() {
+    tareas[index].completada = checkbox.checked;
+    guardarTareas();
+    mostrarTareas();
+  });
+
+  texto.addEventListener("click", function() {
+    tareas[index].completada = !tareas[index].completada;
+    guardarTareas();
+    mostrarTareas();
+  });
+
+  const bloqueTexto = document.createElement("div");
+  bloqueTexto.classList.add("bloque-texto");
+  bloqueTexto.appendChild(texto);
+  bloqueTexto.appendChild(etiquetaPrioridad);
+  bloqueTexto.appendChild(etiquetaFecha);
+
+  contenedorTexto.appendChild(checkbox);
+  contenedorTexto.appendChild(bloqueTexto);
+
+  const contenedorBotones = document.createElement("div");
+  contenedorBotones.classList.add("botones-tarea");
+
+  const botonEditar = document.createElement("button");
+  botonEditar.textContent = "Editar";
+  botonEditar.classList.add("boton-editar");
+
+  botonEditar.addEventListener("click", function() {
+    tareaEditando = index;
+    mostrarTareas();
+  });
+
+  const botonEliminar = document.createElement("button");
+  botonEliminar.textContent = "Eliminar";
+
+  botonEliminar.addEventListener("click", function() {
+    eliminarTarea(index);
+  });
+
+  contenedorBotones.appendChild(botonEditar);
+  contenedorBotones.appendChild(botonEliminar);
+
+  nuevaTarea.appendChild(contenedorTexto);
+  nuevaTarea.appendChild(contenedorBotones);
+
+  lista.appendChild(nuevaTarea);
+}
+
+function mostrarFormularioEdicion(tarea, index) {
+  const nuevaTarea = document.createElement("li");
+  nuevaTarea.classList.add("modo-edicion");
+
+  const inputEditar = document.createElement("input");
+  inputEditar.type = "text";
+  inputEditar.value = tarea.texto;
+  inputEditar.classList.add("input-editar");
+
+  const prioridadEditar = document.createElement("select");
+  prioridadEditar.classList.add("select-editar");
+
+  const opciones = ["baja", "media", "alta"];
+
+  opciones.forEach(function(opcion) {
+    const option = document.createElement("option");
+    option.value = opcion;
+    option.textContent = opcion.charAt(0).toUpperCase() + opcion.slice(1);
+
+    if (opcion === tarea.prioridad) {
+      option.selected = true;
     }
 
-    checkbox.addEventListener("change", function() {
-      tareas[index].completada = checkbox.checked;
-      guardarTareas();
-      mostrarTareas();
-    });
-
-    texto.addEventListener("click", function() {
-      tareas[index].completada = !tareas[index].completada;
-      guardarTareas();
-      mostrarTareas();
-    });
-
-    const bloqueTexto = document.createElement("div");
-    bloqueTexto.classList.add("bloque-texto");
-    bloqueTexto.appendChild(texto);
-    bloqueTexto.appendChild(etiquetaPrioridad);
-    bloqueTexto.appendChild(etiquetaFecha);
-
-    contenedorTexto.appendChild(checkbox);
-    contenedorTexto.appendChild(bloqueTexto);
-
-    const contenedorBotones = document.createElement("div");
-    contenedorBotones.classList.add("botones-tarea");
-
-    const botonEditar = document.createElement("button");
-    botonEditar.textContent = "Editar";
-    botonEditar.classList.add("boton-editar");
-
-    botonEditar.addEventListener("click", function() {
-      editarTarea(index);
-    });
-
-    const botonEliminar = document.createElement("button");
-    botonEliminar.textContent = "Eliminar";
-
-    botonEliminar.addEventListener("click", function() {
-      eliminarTarea(index);
-    });
-
-    contenedorBotones.appendChild(botonEditar);
-    contenedorBotones.appendChild(botonEliminar);
-
-    nuevaTarea.appendChild(contenedorTexto);
-    nuevaTarea.appendChild(contenedorBotones);
-
-    lista.appendChild(nuevaTarea);
+    prioridadEditar.appendChild(option);
   });
+
+  const fechaEditar = document.createElement("input");
+  fechaEditar.type = "date";
+  fechaEditar.value = tarea.fecha;
+  fechaEditar.classList.add("fecha-editar");
+
+  const contenedorBotones = document.createElement("div");
+  contenedorBotones.classList.add("botones-tarea");
+
+  const botonGuardar = document.createElement("button");
+  botonGuardar.textContent = "Guardar";
+  botonGuardar.classList.add("boton-guardar");
+
+  botonGuardar.addEventListener("click", function() {
+    guardarEdicion(index, inputEditar.value, prioridadEditar.value, fechaEditar.value);
+  });
+
+  const botonCancelar = document.createElement("button");
+  botonCancelar.textContent = "Cancelar";
+  botonCancelar.classList.add("boton-cancelar");
+
+  botonCancelar.addEventListener("click", function() {
+    tareaEditando = null;
+    mostrarTareas();
+  });
+
+  contenedorBotones.appendChild(botonGuardar);
+  contenedorBotones.appendChild(botonCancelar);
+
+  nuevaTarea.appendChild(inputEditar);
+  nuevaTarea.appendChild(prioridadEditar);
+  nuevaTarea.appendChild(fechaEditar);
+  nuevaTarea.appendChild(contenedorBotones);
+
+  lista.appendChild(nuevaTarea);
+
+  inputEditar.focus();
+}
+
+function guardarEdicion(index, nuevoTexto, nuevaPrioridad, nuevaFecha) {
+  const textoLimpio = nuevoTexto.trim();
+
+  if (textoLimpio === "") {
+    alert("La tarea no puede quedar vacía.");
+    return;
+  }
+
+  tareas[index].texto = textoLimpio;
+  tareas[index].prioridad = nuevaPrioridad;
+  tareas[index].fecha = nuevaFecha;
+
+  tareaEditando = null;
+
+  guardarTareas();
+  mostrarTareas();
 }
 
 function agregarTarea() {
@@ -181,61 +273,9 @@ function agregarTarea() {
   fechaInput.value = "";
 }
 
-function editarTarea(index) {
-  const tareaActual = tareas[index];
-
-  const nuevoTexto = prompt("Edita el nombre de la tarea:", tareaActual.texto);
-
-  if (nuevoTexto === null) {
-    return;
-  }
-
-  const textoLimpio = nuevoTexto.trim();
-
-  if (textoLimpio === "") {
-    alert("La tarea no puede quedar vacía.");
-    return;
-  }
-
-  const nuevaPrioridad = prompt(
-    "Escribe la prioridad: alta, media o baja",
-    tareaActual.prioridad
-  );
-
-  if (nuevaPrioridad === null) {
-    return;
-  }
-
-  const prioridadLimpia = nuevaPrioridad.trim().toLowerCase();
-
-  if (
-    prioridadLimpia !== "alta" &&
-    prioridadLimpia !== "media" &&
-    prioridadLimpia !== "baja"
-  ) {
-    alert("La prioridad debe ser: alta, media o baja.");
-    return;
-  }
-
-  const nuevaFecha = prompt(
-    "Escribe la fecha en formato AAAA-MM-DD o deja vacío:",
-    tareaActual.fecha
-  );
-
-  if (nuevaFecha === null) {
-    return;
-  }
-
-  tareas[index].texto = textoLimpio;
-  tareas[index].prioridad = prioridadLimpia;
-  tareas[index].fecha = nuevaFecha.trim();
-
-  guardarTareas();
-  mostrarTareas();
-}
-
 function cambiarFiltro(filtro) {
   filtroActual = filtro;
+  tareaEditando = null;
   actualizarBotonActivo();
   mostrarTareas();
 }
@@ -256,6 +296,7 @@ function actualizarBotonActivo() {
 
 function eliminarTarea(index) {
   tareas.splice(index, 1);
+  tareaEditando = null;
   guardarTareas();
   mostrarTareas();
 }
@@ -270,6 +311,8 @@ function borrarCompletadas() {
   tareas = tareas.filter(function(tarea) {
     return !tarea.completada;
   });
+
+  tareaEditando = null;
 
   guardarTareas();
   mostrarTareas();
