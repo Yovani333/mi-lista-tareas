@@ -2,6 +2,7 @@ const input = document.getElementById("tareaInput");
 const prioridadInput = document.getElementById("prioridadInput");
 const fechaInput = document.getElementById("fechaInput");
 const lista = document.getElementById("listaTareas");
+const contadorTareas = document.getElementById("contadorTareas");
 
 let filtroActual = "todas";
 
@@ -36,6 +37,7 @@ guardarTareas();
 
 function mostrarTareas() {
   lista.innerHTML = "";
+  actualizarContador();
 
   const tareasOrdenadas = [...tareas].sort(function(a, b) {
     const ordenPrioridad = {
@@ -175,6 +177,20 @@ function eliminarTarea(index) {
   tareas.splice(index, 1);
   guardarTareas();
   mostrarTareas();
+}
+
+function actualizarContador() {
+  const total = tareas.length;
+  const completadas = tareas.filter(function(tarea) {
+    return tarea.completada;
+  }).length;
+
+  const pendientes = total - completadas;
+
+  contadorTareas.textContent =
+    "Pendientes: " + pendientes +
+    " | Completadas: " + completadas +
+    " | Total: " + total;
 }
 
 function guardarTareas() {
