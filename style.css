@@ -107,3 +107,43 @@ li {
   opacity: 0.5;
   color: #555;
 }
+select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.bloque-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.etiqueta-prioridad {
+  font-size: 11px;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.prioridad-alta {
+  border-left: 6px solid #ef4444;
+}
+
+.prioridad-media {
+  border-left: 6px solid #f59e0b;
+}
+
+.prioridad-baja {
+  border-left: 6px solid #22c55e;
+}
+
+.tarea-completada {
+  background-color: #d1fae5 !important;
+}
+
+.completada {
+  text-decoration: line-through;
+  opacity: 0.5;
+  color: #555;
+}
