@@ -23,6 +23,10 @@ tareas = tareas.map(function(tarea) {
     tarea.fecha = "";
   }
 
+  if (tarea.completada === undefined) {
+    tarea.completada = false;
+  }
+
   return tarea;
 });
 
@@ -37,6 +41,10 @@ function mostrarTareas() {
       media: 2,
       baja: 3
     };
+
+    if (a.completada !== b.completada) {
+      return a.completada - b.completada;
+    }
 
     return ordenPrioridad[a.prioridad] - ordenPrioridad[b.prioridad];
   });
