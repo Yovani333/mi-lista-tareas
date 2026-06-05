@@ -259,3 +259,11 @@ input[type="date"] {
   background-color: #2563eb;
   color: white;
 }
+.boton-limpiar {
+  background-color: #dc2626 !important;
+  color: white !important;
+}
+
+.boton-limpiar:hover {
+  background-color: #b91c1c !important;
+}
