@@ -228,3 +228,20 @@ input[type="date"] {
     grid-column: span 1;
   }
 }
+.filtros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.filtros button {
+  padding: 8px 12px;
+  font-size: 13px;
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.filtros button:hover {
+  background-color: #d1d5db;
+}
