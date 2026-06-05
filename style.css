@@ -255,3 +255,7 @@ input[type="date"] {
   font-weight: bold;
   color: #374151;
 }
+.filtros button.activo {
+  background-color: #2563eb;
+  color: white;
+}
