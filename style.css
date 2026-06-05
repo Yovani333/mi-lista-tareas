@@ -180,3 +180,51 @@ input[type="date"] {
     grid-template-columns: 1fr;
   }
 }
+.formulario {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 120px 180px 110px;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.formulario input,
+.formulario select,
+.formulario button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#tareaInput {
+  min-width: 180px;
+}
+
+@media (max-width: 700px) {
+  .formulario {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #tareaInput {
+    grid-column: span 2;
+  }
+
+  input[type="date"] {
+    grid-column: span 1;
+  }
+
+  .formulario button {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+
+  #tareaInput,
+  input[type="date"],
+  .formulario button {
+    grid-column: span 1;
+  }
+}
