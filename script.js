@@ -3,23 +3,50 @@ const lista = document.getElementById("listaTareas");
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
 
+// Convierte tareas antiguas de texto simple a formato nuevo
+tareas = tareas.map(function(tarea) {
+  if (typeof tarea === "string") {
+    return {
+      texto: tarea,
+      completada: false
+    };
+  }
+
+  return tarea;
+});
+
+guardarTareas();
+
 function mostrarTareas() {
   lista.innerHTML = "";
 
   tareas.forEach(function(tarea, index) {
     const nuevaTarea = document.createElement("li");
 
+    const contenedorTexto = document.createElement("div");
+    contenedorTexto.classList.add("tarea-info");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = tarea.completada;
+
     const texto = document.createElement("span");
     texto.textContent = tarea.texto;
 
     if (tarea.completada) {
-      texto.style.textDecoration = "line-through";
-      texto.style.opacity = "0.6";
+      texto.classList.add("completada");
     }
+
+    checkbox.onchange = function() {
+      cambiarEstado(index);
+    };
 
     texto.onclick = function() {
       cambiarEstado(index);
     };
+
+    contenedorTexto.appendChild(checkbox);
+    contenedorTexto.appendChild(texto);
 
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
@@ -28,7 +55,7 @@ function mostrarTareas() {
       eliminarTarea(index);
     };
 
-    nuevaTarea.appendChild(texto);
+    nuevaTarea.appendChild(contenedorTexto);
     nuevaTarea.appendChild(botonEliminar);
     lista.appendChild(nuevaTarea);
   });
