@@ -1,5 +1,6 @@
 const input = document.getElementById("tareaInput");
 const prioridadInput = document.getElementById("prioridadInput");
+const fechaInput = document.getElementById("fechaInput");
 const lista = document.getElementById("listaTareas");
 
 let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
@@ -9,12 +10,17 @@ tareas = tareas.map(function(tarea) {
     return {
       texto: tarea,
       completada: false,
-      prioridad: "baja"
+      prioridad: "baja",
+      fecha: ""
     };
   }
 
   if (!tarea.prioridad) {
     tarea.prioridad = "baja";
+  }
+
+  if (!tarea.fecha) {
+    tarea.fecha = "";
   }
 
   return tarea;
@@ -52,6 +58,15 @@ function mostrarTareas() {
     etiquetaPrioridad.textContent = tarea.prioridad.toUpperCase();
     etiquetaPrioridad.classList.add("etiqueta-prioridad");
 
+    const etiquetaFecha = document.createElement("small");
+    etiquetaFecha.classList.add("etiqueta-fecha");
+
+    if (tarea.fecha) {
+      etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
+    } else {
+      etiquetaFecha.textContent = "Sin fecha límite";
+    }
+
     checkbox.addEventListener("change", function() {
       tareas[index].completada = checkbox.checked;
       guardarTareas();
@@ -68,6 +83,7 @@ function mostrarTareas() {
     bloqueTexto.classList.add("bloque-texto");
     bloqueTexto.appendChild(texto);
     bloqueTexto.appendChild(etiquetaPrioridad);
+    bloqueTexto.appendChild(etiquetaFecha);
 
     contenedorTexto.appendChild(checkbox);
     contenedorTexto.appendChild(bloqueTexto);
@@ -89,6 +105,7 @@ function mostrarTareas() {
 function agregarTarea() {
   const textoTarea = input.value.trim();
   const prioridad = prioridadInput.value;
+  const fecha = fechaInput.value;
 
   if (textoTarea === "") {
     alert("Por favor escribe una tarea.");
@@ -98,7 +115,8 @@ function agregarTarea() {
   const nuevaTarea = {
     texto: textoTarea,
     completada: false,
-    prioridad: prioridad
+    prioridad: prioridad,
+    fecha: fecha
   };
 
   tareas.push(nuevaTarea);
@@ -107,6 +125,7 @@ function agregarTarea() {
 
   input.value = "";
   prioridadInput.value = "baja";
+  fechaInput.value = "";
 }
 
 function eliminarTarea(index) {
@@ -117,6 +136,11 @@ function eliminarTarea(index) {
 
 function guardarTareas() {
   localStorage.setItem("tareas", JSON.stringify(tareas));
+}
+
+function formatearFecha(fecha) {
+  const partes = fecha.split("-");
+  return partes[2] + "/" + partes[1] + "/" + partes[0];
 }
 
 mostrarTareas();
