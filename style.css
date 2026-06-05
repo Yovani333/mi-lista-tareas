@@ -267,3 +267,17 @@ input[type="date"] {
 .boton-limpiar:hover {
   background-color: #b91c1c !important;
 }
+.botones-tarea {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.boton-editar {
+  background-color: #f59e0b !important;
+  color: white !important;
+}
+
+.boton-editar:hover {
+  background-color: #d97706 !important;
+}
