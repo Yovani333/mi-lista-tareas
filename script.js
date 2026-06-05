@@ -193,6 +193,20 @@ function eliminarTarea(index) {
   guardarTareas();
   mostrarTareas();
 }
+function borrarCompletadas() {
+  const confirmar = confirm("¿Seguro que quieres borrar todas las tareas completadas?");
+
+  if (!confirmar) {
+    return;
+  }
+
+  tareas = tareas.filter(function(tarea) {
+    return !tarea.completada;
+  });
+
+  guardarTareas();
+  mostrarTareas();
+}
 
 function actualizarContador() {
   const total = tareas.length;
