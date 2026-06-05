@@ -110,21 +110,16 @@ function mostrarTareaNormal(tarea, index) {
   const etiquetaFecha = document.createElement("small");
   etiquetaFecha.classList.add("etiqueta-fecha");
 
-if (tarea.fecha) {
-  etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
-} else {
-  etiquetaFecha.textContent = "Sin fecha límite";
-}
+  if (tarea.fecha) {
+    etiquetaFecha.textContent = "Vence: " + formatearFecha(tarea.fecha);
+  } else {
+    etiquetaFecha.textContent = "Sin fecha límite";
+  }
 
-const etiquetaEstadoFecha = document.createElement("small");
-etiquetaEstadoFecha.textContent = obtenerEstadoFecha(tarea.fecha);
-etiquetaEstadoFecha.classList.add("estado-fecha");
-
-if (tarea.fecha) {
+  const etiquetaEstadoFecha = document.createElement("small");
+  etiquetaEstadoFecha.textContent = obtenerEstadoFecha(tarea.fecha);
+  etiquetaEstadoFecha.classList.add("estado-fecha");
   etiquetaEstadoFecha.classList.add(obtenerClaseFecha(tarea.fecha));
-} else {
-  etiquetaEstadoFecha.classList.add("sin-fecha");
-}
 
   checkbox.addEventListener("change", function() {
     tareas[index].completada = checkbox.checked;
@@ -140,10 +135,10 @@ if (tarea.fecha) {
 
   const bloqueTexto = document.createElement("div");
   bloqueTexto.classList.add("bloque-texto");
-bloqueTexto.appendChild(texto);
-bloqueTexto.appendChild(etiquetaPrioridad);
-bloqueTexto.appendChild(etiquetaFecha);
-bloqueTexto.appendChild(etiquetaEstadoFecha);
+  bloqueTexto.appendChild(texto);
+  bloqueTexto.appendChild(etiquetaPrioridad);
+  bloqueTexto.appendChild(etiquetaFecha);
+  bloqueTexto.appendChild(etiquetaEstadoFecha);
 
   contenedorTexto.appendChild(checkbox);
   contenedorTexto.appendChild(bloqueTexto);
@@ -240,24 +235,6 @@ function mostrarFormularioEdicion(tarea, index) {
   inputEditar.focus();
 }
 
-function guardarEdicion(index, nuevoTexto, nuevaPrioridad, nuevaFecha) {
-  const textoLimpio = nuevoTexto.trim();
-
-  if (textoLimpio === "") {
-    alert("La tarea no puede quedar vacía.");
-    return;
-  }
-
-  tareas[index].texto = textoLimpio;
-  tareas[index].prioridad = nuevaPrioridad;
-  tareas[index].fecha = nuevaFecha;
-
-  tareaEditando = null;
-
-  guardarTareas();
-  mostrarTareas();
-}
-
 function agregarTarea() {
   const textoTarea = input.value.trim();
   const prioridad = prioridadInput.value;
@@ -282,6 +259,24 @@ function agregarTarea() {
   input.value = "";
   prioridadInput.value = "baja";
   fechaInput.value = "";
+}
+
+function guardarEdicion(index, nuevoTexto, nuevaPrioridad, nuevaFecha) {
+  const textoLimpio = nuevoTexto.trim();
+
+  if (textoLimpio === "") {
+    alert("La tarea no puede quedar vacía.");
+    return;
+  }
+
+  tareas[index].texto = textoLimpio;
+  tareas[index].prioridad = nuevaPrioridad;
+  tareas[index].fecha = nuevaFecha;
+
+  tareaEditando = null;
+
+  guardarTareas();
+  mostrarTareas();
 }
 
 function cambiarFiltro(filtro) {
@@ -401,6 +396,8 @@ function obtenerClaseFecha(fecha) {
 
   return "fecha-ok";
 }
+
+function guardarTareas() {
   localStorage.setItem("tareas", JSON.stringify(tareas));
 }
 
