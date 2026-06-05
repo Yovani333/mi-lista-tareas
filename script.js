@@ -73,7 +73,6 @@ function mostrarTareas() {
     const index = tareas.indexOf(tarea);
 
     const nuevaTarea = document.createElement("li");
-
     nuevaTarea.classList.add("prioridad-" + tarea.prioridad);
 
     if (tarea.completada) {
@@ -128,6 +127,17 @@ function mostrarTareas() {
     contenedorTexto.appendChild(checkbox);
     contenedorTexto.appendChild(bloqueTexto);
 
+    const contenedorBotones = document.createElement("div");
+    contenedorBotones.classList.add("botones-tarea");
+
+    const botonEditar = document.createElement("button");
+    botonEditar.textContent = "Editar";
+    botonEditar.classList.add("boton-editar");
+
+    botonEditar.addEventListener("click", function() {
+      editarTarea(index);
+    });
+
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
 
@@ -135,8 +145,11 @@ function mostrarTareas() {
       eliminarTarea(index);
     });
 
+    contenedorBotones.appendChild(botonEditar);
+    contenedorBotones.appendChild(botonEliminar);
+
     nuevaTarea.appendChild(contenedorTexto);
-    nuevaTarea.appendChild(botonEliminar);
+    nuevaTarea.appendChild(contenedorBotones);
 
     lista.appendChild(nuevaTarea);
   });
@@ -168,6 +181,59 @@ function agregarTarea() {
   fechaInput.value = "";
 }
 
+function editarTarea(index) {
+  const tareaActual = tareas[index];
+
+  const nuevoTexto = prompt("Edita el nombre de la tarea:", tareaActual.texto);
+
+  if (nuevoTexto === null) {
+    return;
+  }
+
+  const textoLimpio = nuevoTexto.trim();
+
+  if (textoLimpio === "") {
+    alert("La tarea no puede quedar vacía.");
+    return;
+  }
+
+  const nuevaPrioridad = prompt(
+    "Escribe la prioridad: alta, media o baja",
+    tareaActual.prioridad
+  );
+
+  if (nuevaPrioridad === null) {
+    return;
+  }
+
+  const prioridadLimpia = nuevaPrioridad.trim().toLowerCase();
+
+  if (
+    prioridadLimpia !== "alta" &&
+    prioridadLimpia !== "media" &&
+    prioridadLimpia !== "baja"
+  ) {
+    alert("La prioridad debe ser: alta, media o baja.");
+    return;
+  }
+
+  const nuevaFecha = prompt(
+    "Escribe la fecha en formato AAAA-MM-DD o deja vacío:",
+    tareaActual.fecha
+  );
+
+  if (nuevaFecha === null) {
+    return;
+  }
+
+  tareas[index].texto = textoLimpio;
+  tareas[index].prioridad = prioridadLimpia;
+  tareas[index].fecha = nuevaFecha.trim();
+
+  guardarTareas();
+  mostrarTareas();
+}
+
 function cambiarFiltro(filtro) {
   filtroActual = filtro;
   actualizarBotonActivo();
@@ -193,6 +259,7 @@ function eliminarTarea(index) {
   guardarTareas();
   mostrarTareas();
 }
+
 function borrarCompletadas() {
   const confirmar = confirm("¿Seguro que quieres borrar todas las tareas completadas?");
 
@@ -210,6 +277,7 @@ function borrarCompletadas() {
 
 function actualizarContador() {
   const total = tareas.length;
+
   const completadas = tareas.filter(function(tarea) {
     return tarea.completada;
   }).length;
@@ -231,5 +299,5 @@ function formatearFecha(fecha) {
   return partes[2] + "/" + partes[1] + "/" + partes[0];
 }
 
-mostrarTareas();
 actualizarBotonActivo();
+mostrarTareas();
