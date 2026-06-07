@@ -609,9 +609,12 @@ li {
   }
 
   .formulario,
-  .filtros,
   .botones-tarea {
     grid-template-columns: 1fr;
+  }
+
+  .filtros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   #tareaInput,
@@ -619,6 +622,10 @@ li {
   .formulario button,
   .boton-limpiar {
     grid-column: auto;
+  }
+
+  .boton-limpiar {
+    grid-column: 1 / -1;
   }
 
   li {
