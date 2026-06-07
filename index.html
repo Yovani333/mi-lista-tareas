@@ -24,8 +24,15 @@
 
       <button onclick="agregarTarea()">Agregar</button>
     </div>
-    <div id="contadorTareas" class="contador-tareas">
+<div id="contadorTareas" class="contador-tareas">
   Pendientes: 0 | Completadas: 0 | Total: 0
+</div>
+    <div class="buscador-contenedor">
+  <input 
+    type="text" 
+    id="buscadorInput" 
+    placeholder="Buscar tarea..."
+  >
 </div>
 <div class="filtros">
   <button id="filtro-todas" class="activo" onclick="cambiarFiltro('todas')">Todas</button>
@@ -35,13 +42,6 @@
   <button id="filtro-media" onclick="cambiarFiltro('media')">Media</button>
   <button id="filtro-baja" onclick="cambiarFiltro('baja')">Baja</button>
   <button class="boton-limpiar" onclick="borrarCompletadas()">Borrar completadas</button>
-</div>
-    <div class="buscador-contenedor">
-  <input 
-    type="text" 
-    id="buscadorInput" 
-    placeholder="Buscar tarea..."
-  >
 </div>
     <ul id="listaTareas"></ul>
   </div>
